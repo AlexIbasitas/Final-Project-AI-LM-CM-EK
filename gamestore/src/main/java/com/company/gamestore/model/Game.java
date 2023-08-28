@@ -1,4 +1,5 @@
 package com.company.gamestore.model;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ import java.util.Set;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "game")
 public class Game implements Serializable {
+
     @Id
     @Column(name = "game_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -115,5 +117,6 @@ public class Game implements Serializable {
                 ", quantity=" + quantity +
                 ", description='" + description + '\'' +
                 '}';
+
     }
 }
