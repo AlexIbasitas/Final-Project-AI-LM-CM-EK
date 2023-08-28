@@ -1,0 +1,25 @@
+type Game {
+    id: ID!
+    title: String
+    esrbRating: String
+    description: String
+    price: Float
+    studio: String
+    quantity: Int
+}
+
+type Query {
+    games: [Game]
+    gameById(id: ID!): Game
+    getGameByStudio(studio: String): Game
+    getGameByTitle(title: String): Game
+    getGameByESRB(esrbRating: String): Game
+}
+
+#type Mutation {
+#    addGame(title: String, esrbRating:String, description:String, price:Float, studio:String, quantity:Int): Game
+#}
+
+#type Mutation {
+#    addGame(title: String, esrbRating: String, description: String, price:Float, studio: String, quantity: Int) : Game
+#}
