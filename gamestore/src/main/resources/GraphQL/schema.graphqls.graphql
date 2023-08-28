@@ -6,10 +6,10 @@ type Invoice {
     zipcode: String!
     item_type: String!
     item_id: Int!
-    unit_price: Float
+    unit_price: Float!
     quantity: Int!
-    subtotal: Float
-    tax: Float
-    processing_fee: Float
-    total: Float
+    subtotal: Float!
+    tax: Float!
+    processing_fee: Float!
+    total: Float!
 }

@@ -18,41 +18,18 @@ public class Invoice implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull
     private String name;
-
     private String street;
-
-    @NotNull
     private String city;
-
-    @NotNull
     private String state;
-
     private String zipcode;
-
-    @NotNull
     private String item_type;
-
-    @NotNull
     private int item_id;
-
-    @NotNull
     private BigDecimal unit_price;
-
-    @NotNull
     private int quantity;
-
-    @NotNull
     private BigDecimal subtotal;
-
-    @NotNull
     private BigDecimal tax;
-
-    @NotNull
     private BigDecimal processing_fee;
-
-    @NotNull
     private BigDecimal total;
 
     public Invoice() {}

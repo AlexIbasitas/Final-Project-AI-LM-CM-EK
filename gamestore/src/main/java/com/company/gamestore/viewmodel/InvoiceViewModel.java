@@ -6,12 +6,12 @@ import com.sun.istack.NotNull;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class InvoiceViewModel {
 
     // put jsr303 stuff here
-    @NotNull
     private int id;
 
     @NotNull
@@ -36,6 +36,8 @@ public class InvoiceViewModel {
 
     @NotNull
     private int item_id;
+
+    private BigDecimal unit_price;
 
     @NotNull
     @Min(1)
