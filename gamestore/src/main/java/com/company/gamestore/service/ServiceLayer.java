@@ -23,6 +23,7 @@ public class ServiceLayer {
     private FeeRepository feeRepository;
     private TaxRepository taxRepository;
 
+    @Autowired
     public ServiceLayer(InvoiceRepository invoiceRepository, GameRepository gameRepository,
                         ConsoleRepository consoleRepository, TShirtRepository tShirtRepository,
                         FeeRepository feeRepository, TaxRepository taxRepository) {
@@ -33,9 +34,6 @@ public class ServiceLayer {
         this.feeRepository = feeRepository;
         this.taxRepository = taxRepository;
     }
-
-    @Autowired
-
 
     @Transactional
     public Invoice saveInvoice (InvoiceViewModel viewModel) {
