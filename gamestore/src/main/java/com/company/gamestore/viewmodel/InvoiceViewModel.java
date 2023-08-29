@@ -1,11 +1,9 @@
 package com.company.gamestore.viewmodel;
 
-import com.sun.istack.NotNull;
-
-
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -14,35 +12,40 @@ public class InvoiceViewModel {
     // put jsr303 stuff here
     private int id;
 
-    @NotNull
+    @NotNull(message = "You must provide a name.")
     private String name;
 
-    @NotNull
+    @NotNull(message = "You must provide a street.")
     private String street;
 
-    @NotNull
+    @NotNull(message = "You must provide a city.")
     private String city;
 
-    @NotNull
-    @Size(min = 2, max = 2)
+    @NotNull(message = "You must provide a state.")
+    @Size(min = 2, max = 2, message = "State must be exactly two letters.")
     private String state;
 
-    @NotNull
-    @Size(min = 5, max = 5)
+    @NotNull(message = "You must provide a zip.")
+    @Size(min = 5, max = 5, message = "Zipcode must be exactly five numbers long.")
     private String zip;
 
-    @NotNull
+    @NotNull(message = "You must provide an item type.")
     private String item_type;
 
-    @NotNull
+    @NotNull(message = "You must provide an item ID.")
     private int item_id;
 
     private BigDecimal unit_price;
 
-    @NotNull
-    @Min(1)
-    @Max(999)
+    @NotNull(message = "You must provide a quantity.")
+    @Min(value = 1, message = "Quantity cannot be less than one.")
+    @Max(value = 999, message = "Quantity cannot be greater than 999.")
     private int quantity;
+
+    private BigDecimal subtotal;
+    private BigDecimal tax;
+    private BigDecimal processing_fee;
+    private BigDecimal total;
 
 
     public int getId() {

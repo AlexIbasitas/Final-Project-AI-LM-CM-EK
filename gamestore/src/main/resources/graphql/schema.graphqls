@@ -18,6 +18,22 @@ type Console {
     quantity: Int!
 }
 
+type Invoice {
+    id: ID!
+    name: String!
+    street: String!
+    city: String!
+    zipcode: String!
+    item_type: String!
+    item_id: Int!
+    unit_price: Float!
+    quantity: Int!
+    subtotal: Float!
+    tax: Float!
+    processing_fee: Float!
+    total: Float!
+}
+
 type Query {
     consoles: [Console]
     consolebyID(id:ID!): Console
