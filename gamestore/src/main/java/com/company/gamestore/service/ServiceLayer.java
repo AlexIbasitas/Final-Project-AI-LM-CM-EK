@@ -35,6 +35,7 @@ public class ServiceLayer {
         this.taxRepository = taxRepository;
     }
 
+
     @Transactional
     public Invoice saveInvoice (InvoiceViewModel viewModel) {
         //Persist Invoice
@@ -54,73 +55,25 @@ public class ServiceLayer {
 
         i.setZipcode(viewModel.getZip());
 
-        // validate item type
-        // validate item id
-        // validate quantity
-        // will set each if they are validated
-        validationHelper(viewModel, i);
+        // validate Item_type
+        if(viewModel.getItem_type() != "Games"
+                || viewModel.getItem_type() != "Consoles"
+                || viewModel.getItem_type() != "T-Shirts") {
+            i.setItem_type(viewModel.getItem_type());
+        }
+        else {
+            throw new IllegalArgumentException("Must enter an item type of 'Games', 'Consoles', or 'T-Shirts'");
+        }
 
+        // validate Item_id
+        
+        i.setItem_id(viewModel.getItem_id());
+        i.setQuantity(viewModel.getQuantity());
         //i.setUnit_price();
         i = invoiceRepository.save(i);
         viewModel.setId(i.getId());
 
         return  i;
-    }
-
-    public void validationHelper (InvoiceViewModel ivm, Invoice i) {
-        if(ivm.getItem_type() != "Game"
-                || ivm.getItem_type() != "Console"
-                || ivm.getItem_type() != "TShirt") {
-            i.setItem_type(ivm.getItem_type());
-
-            switch (ivm.getItem_type()) {
-                case "Game":
-                    if(gameRepository.findById(ivm.getId()) != null) {
-                        i.setItem_id(ivm.getItem_id());
-                        if (gameRepository.findAll().size() >= ivm.getQuantity())
-                            i.setQuantity(ivm.getQuantity());
-                        else {
-                            throw new IllegalArgumentException("Quantity cannot exceed " +
-                                    gameRepository.findAll().size() + ".");
-                        }
-                    }
-                    else {
-                        throw new IllegalArgumentException("Item id does not exist.");
-                    }
-                    break;
-                case "Console":
-                    if(consoleRepository.findById(ivm.getId()) != null) {
-                        i.setItem_id(ivm.getItem_id());
-                        if (consoleRepository.findAll().size() >= ivm.getQuantity())
-                            i.setQuantity(ivm.getQuantity());
-                        else {
-                            throw new IllegalArgumentException("Quantity cannot exceed " +
-                                    consoleRepository.findAll().size() + ".");
-                        }
-                    }
-                    else {
-                        throw new IllegalArgumentException("Item id does not exist.");
-                    }
-                    break;
-                case "TShirt":
-                    if(tShirtRepository .findById(ivm.getId()) != null) {
-                        i.setItem_id(ivm.getItem_id());
-                        if (tShirtRepository.findAll().size() >= ivm.getQuantity())
-                            i.setQuantity(ivm.getQuantity());
-                        else {
-                            throw new IllegalArgumentException("Quantity cannot exceed " +
-                                    tShirtRepository.findAll().size() + ".");
-                        }
-                    }
-                    else {
-                        throw new IllegalArgumentException("Item id does not exist.");
-                    }
-                    break;
-            }
-        }
-        else {
-            throw new IllegalArgumentException("Must enter an item type of 'Games', 'Consoles', or 'T-Shirts'");
-        }
     }
 
     public float getSalesTax() {
