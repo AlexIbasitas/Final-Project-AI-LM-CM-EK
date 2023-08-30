@@ -18,15 +18,15 @@ public class Console implements Serializable {
     @Column(name = "console_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    @NotEmpty(message = "You must supply a value for model.")
+//    @NotEmpty(message = "You must supply a value for model.")
     private String model;
-    @NotEmpty(message = "You must supply a value for manufacturer.")
+//    @NotEmpty(message = "You must supply a value for manufacturer.")
     private String manufacturer;
     private String memory_amount;
     private String processor;
-    @NotEmpty(message = "You must supply a value for price.")
+//    @NotEmpty(message = "You must supply a value for price.")
     private BigDecimal price;
-    @NotEmpty(message = "You must supply a value for quantity.")
+//    @NotEmpty(message = "You must supply a value for quantity.")
     private Integer quantity;
 
     public Integer getId() {
