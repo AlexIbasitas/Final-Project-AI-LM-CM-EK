@@ -20,4 +20,23 @@ public class Tax implements Serializable {
 
     @NotNull
     private BigDecimal rate;
+
+    public Tax() {
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public BigDecimal getRate() {
+        return rate;
+    }
+
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
+    }
 }

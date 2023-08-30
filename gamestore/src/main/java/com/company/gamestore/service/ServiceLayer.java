@@ -36,7 +36,8 @@ public class ServiceLayer {
     }
 
     @Transactional
-    public Invoice saveInvoice (InvoiceViewModel viewModel) {
+    public InvoiceViewModel saveInvoice (InvoiceViewModel viewModel) {
+
         //Persist Invoice
         Invoice i = new Invoice();
         i.setName(viewModel.getName());
@@ -44,13 +45,11 @@ public class ServiceLayer {
         i.setCity(viewModel.getCity());
 
         // validate state
-        if (taxRepository.findByState(viewModel.getState()) != null) {
-            i.setState(viewModel.getState());
-        }
-        else
-        {
+        if (taxRepository.findByState(viewModel.getState()) == null) {
             throw new IllegalArgumentException("Must enter a valid state.");
         }
+
+        i.setState(viewModel.getState());
 
         i.setZipcode(viewModel.getZip());
 
@@ -60,75 +59,126 @@ public class ServiceLayer {
         // will set each if they are validated
         validationHelper(viewModel, i);
 
-        //i.setUnit_price();
+
+        i.setUnit_price(handleUnitPrice(viewModel.getItem_id()));
+        viewModel.setUnit_price(i.getUnit_price());
+
+        i.setProcessing_fee(handleProcessingFee(viewModel.getItem_type()));
+        viewModel.setProcessing_fee(i.getProcessing_fee());
+
+        i.setSubtotal(calculateSubtotal(viewModel.getQuantity(), i.getUnit_price()));
+        viewModel.setSubtotal(i.getSubtotal());
+
+        i.setTax(handleTax(viewModel.getState(), i.getSubtotal()));
+        viewModel.setTax(i.getTax());
+
+        i.setTotal(calculateTotal(viewModel.getSubtotal(),
+                viewModel.getTax(),
+                viewModel.getProcessing_fee()));
+        viewModel.setTotal(i.getTotal());
+
         i = invoiceRepository.save(i);
+
         viewModel.setId(i.getId());
 
-        return  i;
+        return viewModel;
     }
 
     public void validationHelper (InvoiceViewModel ivm, Invoice i) {
         if(ivm.getItem_type() != "Game"
-                || ivm.getItem_type() != "Console"
-                || ivm.getItem_type() != "TShirt") {
-            i.setItem_type(ivm.getItem_type());
+                && ivm.getItem_type() != "Console"
+                && ivm.getItem_type() != "TShirt") {
 
-            switch (ivm.getItem_type()) {
-                case "Game":
-                    if(gameRepository.findById(ivm.getId()) != null) {
-                        i.setItem_id(ivm.getItem_id());
-                        if (gameRepository.findAll().size() >= ivm.getQuantity())
-                            i.setQuantity(ivm.getQuantity());
-                        else {
-                            throw new IllegalArgumentException("Quantity cannot exceed " +
-                                    gameRepository.findAll().size() + ".");
-                        }
-                    }
-                    else {
-                        throw new IllegalArgumentException("Item id does not exist.");
-                    }
-                    break;
-                case "Console":
-                    if(consoleRepository.findById(ivm.getId()) != null) {
-                        i.setItem_id(ivm.getItem_id());
-                        if (consoleRepository.findAll().size() >= ivm.getQuantity())
-                            i.setQuantity(ivm.getQuantity());
-                        else {
-                            throw new IllegalArgumentException("Quantity cannot exceed " +
-                                    consoleRepository.findAll().size() + ".");
-                        }
-                    }
-                    else {
-                        throw new IllegalArgumentException("Item id does not exist.");
-                    }
-                    break;
-                case "TShirt":
-                    if(tShirtRepository .findById(ivm.getId()) != null) {
-                        i.setItem_id(ivm.getItem_id());
-                        if (tShirtRepository.findAll().size() >= ivm.getQuantity())
-                            i.setQuantity(ivm.getQuantity());
-                        else {
-                            throw new IllegalArgumentException("Quantity cannot exceed " +
-                                    tShirtRepository.findAll().size() + ".");
-                        }
-                    }
-                    else {
-                        throw new IllegalArgumentException("Item id does not exist.");
-                    }
-                    break;
-            }
+            throw new IllegalArgumentException("Must enter an item type of 'Game', 'Console', or 'TShirt'");
         }
-        else {
-            throw new IllegalArgumentException("Must enter an item type of 'Games', 'Consoles', or 'T-Shirts'");
+
+        // setting the item type after successful validation
+        i.setItem_type(ivm.getItem_type());
+
+        String type = ivm.getItem_type();
+        int id = ivm.getItem_id();
+
+        switch (type) {
+            case "Game":
+                if(!gameRepository.findById(id).isPresent()) {
+
+                    throw new IllegalArgumentException("Item id does not exist.");
+                }
+                i.setItem_id(id);
+                if (gameRepository.findById(id).get().getQuantity() >= ivm.getQuantity())
+                    i.setQuantity(ivm.getQuantity());
+                else {
+                    throw new IllegalArgumentException("Quantity cannot exceed " +
+                            gameRepository.findById(id).get().getQuantity() + ".");
+                }
+
+                // setting the unit price
+                i.setUnit_price(gameRepository.findById(id).get().getPrice());
+                break;
+
+            case "Console":
+                if(!consoleRepository.findById(id).isPresent()) {
+                    throw new IllegalArgumentException("Item id does not exist.");
+                }
+                i.setItem_id(id);
+                if (consoleRepository.findById(id).get().getQuantity() >= ivm.getQuantity())
+                    i.setQuantity(ivm.getQuantity());
+                else {
+                    throw new IllegalArgumentException("Quantity cannot exceed " +
+                            consoleRepository.findById(id).get().getQuantity() + ".");
+                }
+
+                //setting the unit price
+                i.setUnit_price(consoleRepository.findById(id).get().getPrice());
+                break;
+
+            case "TShirt":
+                if(!tShirtRepository .findById(id).isPresent()) {
+                    throw new IllegalArgumentException("Item id does not exist.");
+                }
+                i.setItem_id(id);
+                if (tShirtRepository.findById(id).get().getQuantity() >= ivm.getQuantity())
+                    i.setQuantity(ivm.getQuantity());
+                else {
+                    throw new IllegalArgumentException("Quantity cannot exceed " +
+                            tShirtRepository.findAll().size() + ".");
+                }
+
+                // setting the unit price
+                i.setUnit_price(tShirtRepository.findById(id).get().getPrice());
+                break;
         }
     }
 
-    public float getSalesTax() {
-        return 0;
+    public BigDecimal calculateSubtotal (int count, BigDecimal unitPrice) {
+        BigDecimal quantity = new BigDecimal(count);
+        BigDecimal subTotal = quantity.multiply(unitPrice);
+
+        return subTotal;
     }
 
-    public float getProcessingFee() {
-        return 0;
+    public BigDecimal handleTax(String initials, BigDecimal subTotal) {
+        BigDecimal stateTax = taxRepository.findByState(initials).getRate();
+        BigDecimal tax = stateTax.multiply(subTotal);
+        return tax;
+    }
+
+    public BigDecimal handleUnitPrice(int id) {
+        BigDecimal unitPrice = gameRepository.findById(id).get().getPrice();
+
+        return unitPrice;
+    }
+
+    public BigDecimal handleProcessingFee(String type) {
+        BigDecimal fee = feeRepository.findByProductType(type + "s").getFee();
+
+        return fee;
+    }
+
+    public BigDecimal calculateTotal(BigDecimal subTotal, BigDecimal tax, BigDecimal fee) {
+        BigDecimal total = tax.add(subTotal).add(fee);
+
+        return total;
     }
 
 //    public InvoiceViewModel findInvoiceById (int id) {

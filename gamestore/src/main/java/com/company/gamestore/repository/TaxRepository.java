@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface TaxRepository extends JpaRepository<Tax, Integer> {
-    List<Tax> findByState(String stateInitials);
+    Tax findByState(String stateInitials);
 }
