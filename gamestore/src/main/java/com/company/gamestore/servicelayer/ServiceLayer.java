@@ -37,14 +37,14 @@ public class ServiceLayer {
     }
 
     // GET BY ID
-//    public Tshirt findTshirtById(Integer tshirtId) {
-//        Optional<Tshirt> tshirt = tshirtRepository.findById(tshirtId);
-//        if (tshirt.isPresent()) {
-//            return tshirt.get();
-//        } else {
-//            return null;
-//        }
-//    }
+    public Tshirt findTshirtById(Integer tshirtId) {
+        Optional<Tshirt> tshirt = tshirtRepository.findById(tshirtId);
+        if (tshirt.isPresent()) {
+            return tshirt.get();
+        } else {
+            return null;
+        }
+    }
 
     // CUSTOM
     public List<Tshirt> findAllTshirtsByColor(String color)

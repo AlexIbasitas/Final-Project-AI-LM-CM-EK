@@ -104,6 +104,22 @@ public class TshirtControllerTests {
                         .andExpect(status().isNoContent());
     }
 
+    @Test
+    public void shouldReturnTshirtById() throws Exception {
+        Tshirt tshirt = new Tshirt();
+        tshirt.setSize("small");
+        tshirt.setColor("blue");
+        tshirt.setDescription("A graphic tshirt with a whale.");
+        tshirt.setPrice(new BigDecimal("19.99"));
+        tshirt.setQuantity(1);
+
+        String outputJson = mapper.writeValueAsString(tshirt);
+
+        mockMvc.perform(get("/tshirts/1"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
 
     @Test
     public void shouldDeleteTshirtOnDelete() throws Exception {

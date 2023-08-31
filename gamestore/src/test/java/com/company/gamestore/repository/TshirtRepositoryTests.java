@@ -64,6 +64,8 @@ public class TshirtRepositoryTests {
         assertEquals(r.size(), 2);
     }
 
+
+
     @Test
     public void shouldUpdateTshirt() {
         Tshirt tshirt = new Tshirt();
@@ -81,6 +83,19 @@ public class TshirtRepositoryTests {
         assertEquals(test1.get(), tshirt);
     }
 
+    @Test
+    public void shouldGetTshirtById() {
+        Tshirt tshirt = new Tshirt();
+        tshirt.setSize("M");
+        tshirt.setColor("Red");
+        tshirt.setDescription("A plain red shirt.");
+        tshirt.setPrice(new BigDecimal("19.99"));
+        tshirt.setQuantity(1);
+        tshirt = tshirtRepository.save(tshirt);
+
+        Optional<Tshirt> test1 = tshirtRepository.findById(tshirt.getTshirtId());
+        assertEquals(test1.get(), tshirt);
+    }
     @Test
     public void shouldDeleteTshirtById() {
         Tshirt tshirt = new Tshirt();
