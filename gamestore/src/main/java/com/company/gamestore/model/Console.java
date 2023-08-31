@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -18,15 +19,15 @@ public class Console implements Serializable {
     @Column(name = "console_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-//    @NotEmpty(message = "You must supply a value for model.")
+    @NotEmpty(message = "You must supply a value for model.")
     private String model;
-//    @NotEmpty(message = "You must supply a value for manufacturer.")
+    @NotEmpty(message = "You must supply a value for manufacturer.")
     private String manufacturer;
     private String memory_amount;
     private String processor;
-//    @NotEmpty(message = "You must supply a value for price.")
+    @NotNull(message = "You must supply a value for price.")
     private BigDecimal price;
-//    @NotEmpty(message = "You must supply a value for quantity.")
+    @NotNull(message = "You must supply a value for quantity.")
     private Integer quantity;
 
     public Integer getId() {

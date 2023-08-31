@@ -25,7 +25,7 @@ public class ConsoleController {
     // Update an existing console record
     @PutMapping("/consoles")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateConsoles(@RequestBody Console console) {
+    public void updateConsoles(@RequestBody @Valid Console console) {
         repo.save(console);
     }
 

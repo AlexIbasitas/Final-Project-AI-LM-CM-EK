@@ -70,6 +70,7 @@ public class ConsoleControllerTests {
         test.setManufacturer("Microsoft");
         test.setMemory_amount("500 GB");
         test.setProcessor("Intel Core i7");
+        BigDecimal num = new BigDecimal("229.99");
         test.setPrice(new BigDecimal("229.99"));
         test.setQuantity(2);
 
