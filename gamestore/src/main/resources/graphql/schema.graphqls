@@ -1,0 +1,56 @@
+type Game {
+    id: ID!
+    title: String!
+    esrbRating: String!
+    description: String!
+    price: Float!
+    studio: String!
+    quantity: Int
+}
+
+type Console {
+    id: ID!
+    model: String!
+    manufacturer: String!
+    memory_amount: String
+    processor: String
+    price: Float!
+    quantity: Int!
+}
+
+type Invoice {
+    id: ID!
+    name: String!
+    street: String!
+    city: String!
+    zipcode: String!
+    item_type: String!
+    item_id: Int!
+    unit_price: Float!
+    quantity: Int!
+    subtotal: Float!
+    tax: Float!
+    processing_fee: Float!
+    total: Float!
+}
+
+type Query {
+    consoles: [Console]
+    consolebyID(id:ID!): Console
+    consolebyManufacturer(manufacturer: String!): [Console]
+    games: [Game]
+    gameById(id: ID!): Game
+    getGameByStudio(studio: String): Game
+    getGameByTitle(title: String): Game
+    getGameByESRB(esrbRating: String): Game
+}
+
+
+
+#type Mutation {
+#    addGame(title: String, esrbRating:String, description:String, price:Float, studio:String, quantity:Int): Game
+#}
+
+#type Mutation {
+#    addGame(title: String, esrbRating: String, description: String, price:Float, studio: String, quantity: Int) : Game
+#}
