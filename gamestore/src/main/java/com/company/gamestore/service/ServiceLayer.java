@@ -151,8 +151,17 @@ public class ServiceLayer {
     }
 
     public BigDecimal calculateSubtotal (int count, BigDecimal unitPrice) {
+
+        if(count <= 10) {
+            BigDecimal quantity = new BigDecimal(count);
+            BigDecimal subTotal = quantity.multiply(unitPrice);
+
+            return subTotal;
+        }
+
         BigDecimal quantity = new BigDecimal(count);
         BigDecimal subTotal = quantity.multiply(unitPrice);
+        subTotal.add(new BigDecimal(15.49)); // accounting for quantity > 10
 
         return subTotal;
     }
@@ -170,6 +179,8 @@ public class ServiceLayer {
     }
 
     public BigDecimal handleProcessingFee(String type) {
+        // Appending the 's' based of the READ.me example
+        // containing 'Games'
         BigDecimal fee = feeRepository.findByProductType(type + "s").getFee();
 
         return fee;
@@ -181,34 +192,48 @@ public class ServiceLayer {
         return total;
     }
 
-//    public InvoiceViewModel findInvoiceById (int id) {
-//        Optional<Invoice> invoice = invoiceRepository.findById(id);
-//        return invoice.isPresent() ? buildInvoiceViewModel(invoice.get()) : null;
-//    }
-//
-//    public List<InvoiceViewModel> findAllInvoices () {
-//        List<Invoice> invoiceList = invoiceRepository.findAll();
-//        List<InvoiceViewModel> ivmList = new ArrayList<>();
-//
-//        // Building our list of InvoiceViewModel
-//        invoiceList.stream().forEach(i -> ivmList.add(buildInvoiceViewModel(i)));
-//
-//        return ivmList;
-//    }
-//
-//    private InvoiceViewModel buildInvoiceViewModel(Invoice invoice) {
-//        // Assemble the InvoiceViewModel
-//        InvoiceViewModel ivm = new InvoiceViewModel();
-//        ivm.setId(invoice.getId());
-//        ivm.setName(invoice.getName());
-//        ivm.setStreet(invoice.getStreet());
-//        ivm.setCity(invoice.getCity());
-//        ivm.setState(invoice.getState());
-//        ivm.setZip(invoice.getZipcode());
-//        ivm.setItem_type(invoice.getItem_type());
-//        ivm.setItem_id(invoice.getItem_id());
-//        ivm.setQuantity(invoice.getQuantity());
-//
-//        return ivm;
-//    }
+    public InvoiceViewModel findInvoice (int id) {
+        Optional<Invoice> invoice = invoiceRepository.findById(id);
+        return invoice.isPresent() ? buildInvoiceViewModel(invoice.get()) : null;
+    }
+
+    public List<InvoiceViewModel> findAllInvoices () {
+        List<Invoice> invoiceList = invoiceRepository.findAll();
+        List<InvoiceViewModel> ivmList = new ArrayList<>();
+
+        // Building our list of InvoiceViewModel
+        invoiceList.stream().forEach(i -> ivmList.add(buildInvoiceViewModel(i)));
+
+        return ivmList;
+    }
+
+    public List<InvoiceViewModel> findInvoiceByName (String name) {
+        List<Invoice> invoiceList = invoiceRepository.findByName(name);
+        List<InvoiceViewModel> ivmList = new ArrayList<>();
+
+        // Building our list of InvoiceViewModel
+        invoiceList.stream().forEach(i -> ivmList.add(buildInvoiceViewModel(i)));
+
+        return ivmList;
+    }
+
+    private InvoiceViewModel buildInvoiceViewModel(Invoice invoice) {
+        // Assemble the InvoiceViewModel
+        InvoiceViewModel ivm = new InvoiceViewModel();
+        ivm.setId(invoice.getId());
+        ivm.setName(invoice.getName());
+        ivm.setStreet(invoice.getStreet());
+        ivm.setCity(invoice.getCity());
+        ivm.setState(invoice.getState());
+        ivm.setZip(invoice.getZipcode());
+        ivm.setItem_type(invoice.getItem_type());
+        ivm.setItem_id(invoice.getItem_id());
+        ivm.setQuantity(invoice.getQuantity());
+        ivm.setUnit_price(invoice.getUnit_price());
+        ivm.setTax(invoice.getTax());
+        ivm.setProcessing_fee(invoice.getProcessing_fee());
+        ivm.setTotal(invoice.getTotal());
+
+        return ivm;
+    }
 }

@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -39,7 +40,7 @@ public class InvoiceControllerTest {
 
 
     @Test
-    public void shouldReturnStatus201() throws Exception {
+    public void postInvoiceShouldReturnStatus201() throws Exception {
         // Arrange
         ivm.setName("John Doe");
         ivm.setStreet("123 Main St");
@@ -62,5 +63,80 @@ public class InvoiceControllerTest {
         )
                 .andDo(print())
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void getByIdShouldReturnStatus200 () throws Exception {
+        // Arrange
+        ivm.setId(1);
+        ivm.setName("John Doe");
+        ivm.setStreet("123 Main St");
+        ivm.setCity("Los Angeles");
+        ivm.setState("CA");
+        ivm.setZip("90001");
+        ivm.setItem_type("Game");
+        ivm.setItem_id(123);
+
+        serviceLayer.saveInvoice(ivm);
+
+        String inputJSON = mapper.writeValueAsString(ivm);
+
+        // Act
+        mockMvc.perform(
+                get("/invoices/1")
+                        .content(inputJSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void getAllShouldReturnStatus200 () throws Exception {
+        // Arrange
+        ivm.setName("John Doe");
+        ivm.setStreet("123 Main St");
+        ivm.setCity("Los Angeles");
+        ivm.setState("CA");
+        ivm.setZip("90001");
+        ivm.setItem_type("Game");
+        ivm.setItem_id(123);
+
+        serviceLayer.saveInvoice(ivm);
+
+        String inputJSON = mapper.writeValueAsString(ivm);
+
+        // Act
+        mockMvc.perform(
+                        get("/invoices")
+                                .content(inputJSON)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getByNameShouldReturnStatus200 () throws Exception {
+        // Arrange
+        ivm.setName("John Doe");
+        ivm.setStreet("123 Main St");
+        ivm.setCity("Los Angeles");
+        ivm.setState("CA");
+        ivm.setZip("90001");
+        ivm.setItem_type("Game");
+        ivm.setItem_id(123);
+
+        serviceLayer.saveInvoice(ivm);
+
+        String inputJSON = mapper.writeValueAsString(ivm);
+        String name = new String("John Doe");
+
+        // Act
+        mockMvc.perform(
+                        get("/invoices/name/John Doe")
+                                .content(inputJSON)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }

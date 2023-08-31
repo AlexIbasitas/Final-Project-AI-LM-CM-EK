@@ -21,13 +21,18 @@ public class InvoiceController {
         return serviceLayer.saveInvoice(ivm);
     }
 
-//    @GetMapping
-//    public List<InvoiceViewModel> getAllInvoice() {
-//        return serviceLayer.findAllInvoices();
-//    }
-//
-//    @GetMapping(value = "/{id}")
-//    public InvoiceViewModel getInvoiceById(@PathVariable int id) {
-//        return serviceLayer.findInvoiceById(id);
-//    }
+    @GetMapping("/invoices/{id}")
+    public InvoiceViewModel getInvoiceById(@PathVariable int id) {
+        return serviceLayer.findInvoice(id);
+    }
+
+    @GetMapping("/invoices")
+    public List<InvoiceViewModel> getAllInvoice() {
+        return serviceLayer.findAllInvoices();
+    }
+
+    @GetMapping(value = "/invoices/name/{name}")
+    public List<InvoiceViewModel> getInvoiceByCustomerName(@PathVariable String name) {
+        return serviceLayer.findInvoiceByName(name);
+    }
 }

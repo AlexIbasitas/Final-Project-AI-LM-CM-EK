@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,32 +20,113 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class InvoiceRepositoryTest {
     @Autowired
     InvoiceRepository invoiceRepository;
-    GameRepository gameRepository;
-
-    @Autowired
-    ServiceLayer serviceLayer;
 
     @BeforeEach
     public void setUp() throws Exception {
         invoiceRepository.deleteAll();
     }
 
+    // Test create
     @Test
     public void shouldCreateInvoice() {
+        // Arrange
+        Invoice i = new Invoice();
+        i.setName("John Doe");
+        i.setStreet("123 Main St");
+        i.setCity("Los Angeles");
+        i.setState("CA");
+        i.setZipcode("90001");
+        i.setItem_type("Game");
+        i.setItem_id(123);
+        i.setUnit_price(new BigDecimal("49.99"));
+        i.setQuantity(2);
+        i.setSubtotal(new BigDecimal("99.98"));
+        i.setTax(new BigDecimal("5.99"));
+        i.setProcessing_fee(new BigDecimal("1.49"));
+        i.setTotal(new BigDecimal("107.46"));
 
-        InvoiceViewModel ivm = new InvoiceViewModel();
-        ivm.setName("John Doe");
-        ivm.setStreet("123 Main St");
-        ivm.setCity("Los Angeles");
-        ivm.setState("CA");
-        ivm.setZip("90001");
-        ivm.setItem_type("Game");
-        ivm.setItem_id(123);
-        ivm.setQuantity(1);
+        i = invoiceRepository.save(i);
 
-        ivm = serviceLayer.saveInvoice(ivm);
-
-        Optional<Invoice> invoice1 = invoiceRepository.findById(ivm.getId());
-        assertEquals(invoice1.get(), ivm);
+        // Asser
+        Optional<Invoice> foundInvoice = invoiceRepository.findById(i.getId());
+        assertEquals(foundInvoice.get(), i);
     }
+
+    // Test get by id
+    @Test
+    public void shouldGetInvoiceById() {
+        // Arrange
+        Invoice i = new Invoice();
+        i.setName("John Doe");
+        i.setStreet("123 Main St");
+        i.setCity("Los Angeles");
+        i.setState("CA");
+        i.setZipcode("90001");
+        i.setItem_type("Game");
+        i.setItem_id(123);
+        i.setUnit_price(new BigDecimal("49.99"));
+        i.setQuantity(2);
+        i.setSubtotal(new BigDecimal("99.98"));
+        i.setTax(new BigDecimal("5.99"));
+        i.setProcessing_fee(new BigDecimal("1.49"));
+        i.setTotal(new BigDecimal("107.46"));
+
+        i = invoiceRepository.save(i);
+
+        Optional<Invoice> invoiceFound = invoiceRepository.findById(i.getId());
+        assertEquals(invoiceFound.get(), i);
+    }
+
+    // Test get all
+    @Test
+    public void shouldGetAllInvoices() {
+        // Arrange
+        Invoice i = new Invoice();
+        i.setName("John Doe");
+        i.setStreet("123 Main St");
+        i.setCity("Los Angeles");
+        i.setState("CA");
+        i.setZipcode("90001");
+        i.setItem_type("Game");
+        i.setItem_id(123);
+        i.setUnit_price(new BigDecimal("49.99"));
+        i.setQuantity(2);
+        i.setSubtotal(new BigDecimal("99.98"));
+        i.setTax(new BigDecimal("5.99"));
+        i.setProcessing_fee(new BigDecimal("1.49"));
+        i.setTotal(new BigDecimal("107.46"));
+
+        i = invoiceRepository.save(i);
+
+        // Assert
+        List<Invoice> invoiceList = invoiceRepository.findAll();
+        assertEquals(invoiceList.size(), 1);
+    }
+
+    // Test get by name
+    @Test
+    public void getInvoiceByCustomerName () {
+        // Arrange
+        Invoice i = new Invoice();
+        i.setName("John Doe");
+        i.setStreet("123 Main St");
+        i.setCity("Los Angeles");
+        i.setState("CA");
+        i.setZipcode("90001");
+        i.setItem_type("Game");
+        i.setItem_id(123);
+        i.setUnit_price(new BigDecimal("49.99"));
+        i.setQuantity(2);
+        i.setSubtotal(new BigDecimal("99.98"));
+        i.setTax(new BigDecimal("5.99"));
+        i.setProcessing_fee(new BigDecimal("1.49"));
+        i.setTotal(new BigDecimal("107.46"));
+
+        i = invoiceRepository.save(i);
+
+        // Assert
+        List<Invoice> invoiceList = invoiceRepository.findByName("John Doe");
+        assertEquals(invoiceList.size(), 1);
+    }
+
 }

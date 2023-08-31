@@ -1,9 +1,6 @@
 package com.company.gamestore.viewmodel;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -29,6 +26,7 @@ public class InvoiceViewModel {
     private String zip;
 
     @NotNull(message = "You must provide an item type.")
+    @NotEmpty(message = "Item type cannot be empty.")
     private String item_type;
 
     @NotNull(message = "You must provide an item ID.")
@@ -37,6 +35,7 @@ public class InvoiceViewModel {
     private BigDecimal unit_price;
 
     @NotNull(message = "You must provide a quantity.")
+    @Size(min =  1, message = "Quantity must be at least one.")
     private int quantity;
 
     private BigDecimal subtotal;
