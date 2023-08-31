@@ -17,6 +17,11 @@ public class TshirtController {
     @Autowired
     ServiceLayer serviceLayer;
 
+    @GetMapping("/")
+    public String test() {
+        return "Test Complete";
+    }
+
     @PostMapping("/tshirts")
     @ResponseStatus(HttpStatus.CREATED)
     public void createTshirt(@RequestBody Tshirt tshirt) {
