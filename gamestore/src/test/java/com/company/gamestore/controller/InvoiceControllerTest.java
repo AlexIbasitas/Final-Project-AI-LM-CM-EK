@@ -27,9 +27,6 @@ public class InvoiceControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    InvoiceRepository invoiceRepository;
-
-    @MockBean
     ServiceLayer serviceLayer;
 
     private ObjectMapper mapper = new ObjectMapper();
@@ -129,7 +126,6 @@ public class InvoiceControllerTest {
         serviceLayer.saveInvoice(ivm);
 
         String inputJSON = mapper.writeValueAsString(ivm);
-        String name = new String("John Doe");
 
         // Act
         mockMvc.perform(

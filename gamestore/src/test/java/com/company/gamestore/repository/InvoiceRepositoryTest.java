@@ -1,5 +1,6 @@
 package com.company.gamestore.repository;
 
+import com.company.gamestore.model.Game;
 import com.company.gamestore.model.Invoice;
 import com.company.gamestore.service.ServiceLayer;
 import com.company.gamestore.viewmodel.InvoiceViewModel;
@@ -47,7 +48,7 @@ public class InvoiceRepositoryTest {
 
         i = invoiceRepository.save(i);
 
-        // Asser
+        // Assert
         Optional<Invoice> foundInvoice = invoiceRepository.findById(i.getId());
         assertEquals(foundInvoice.get(), i);
     }
