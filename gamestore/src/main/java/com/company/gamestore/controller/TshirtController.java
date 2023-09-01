@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -22,7 +23,7 @@ public class TshirtController {
 
     @PostMapping("/tshirts")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createTshirt(@RequestBody Tshirt tshirt) {
+    public void createTshirt(@RequestBody @Valid Tshirt tshirt) {
         serviceLayer.saveTshirt(tshirt);
     }
 
@@ -33,7 +34,7 @@ public class TshirtController {
 
     @PutMapping("/tshirts")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateTshirt(@RequestBody Tshirt tshirt) {
+    public void updateTshirt(@RequestBody @Valid Tshirt tshirt) {
         serviceLayer.saveTshirt(tshirt);
     }
 

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -17,12 +18,15 @@ public class Tshirt implements Serializable {
     @Column(name = "tshirt_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int tshirtId;
-
+    @NotEmpty(message = "You must supply a value for size.")
     private String size;
+    @NotEmpty(message = "You must supply a value for color.")
     private String color;
+    @NotEmpty(message = "You must supply a value for description.")
     private String description;
+    @NotNull(message = "You must supply a value for price.")
     private BigDecimal price;
-    @NotNull
+    @NotNull(message = "You must supply a value for quantity.")
     private Integer quantity;
 
     public Tshirt() {
