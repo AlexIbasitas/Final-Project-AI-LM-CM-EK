@@ -47,6 +47,7 @@ public class InvoiceControllerTest {
         ivm.setZip("90001");
         ivm.setItem_type("Game");
         ivm.setItem_id(123);
+        ivm.setQuantity(1);
 
         serviceLayer.saveInvoice(ivm);
 

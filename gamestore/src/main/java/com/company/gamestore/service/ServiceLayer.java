@@ -6,10 +6,14 @@ import com.company.gamestore.repository.*;
 import com.company.gamestore.viewmodel.InvoiceViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.webjars.NotFoundException;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -37,61 +41,60 @@ public class ServiceLayer {
     }
 
     @Transactional
-    public InvoiceViewModel saveInvoice (InvoiceViewModel viewModel) {
+    public InvoiceViewModel saveInvoice (InvoiceViewModel ivm) {
 
         //Persist Invoice
         Invoice i = new Invoice();
-        i.setName(viewModel.getName());
-        i.setStreet(viewModel.getStreet());
-        i.setCity(viewModel.getCity());
+        i.setName(ivm.getName());
+        i.setStreet(ivm.getStreet());
+        i.setCity(ivm.getCity());
 
         // validate state
-        if (taxRepository.findByState(viewModel.getState()) == null) {
+        if (taxRepository.findByState(ivm.getState()) == null) {
             throw new IllegalArgumentException("Must enter a valid state.");
         }
 
-        i.setState(viewModel.getState());
+        i.setState(ivm.getState());
 
-        i.setZipcode(viewModel.getZip());
+        i.setZipcode(ivm.getZip());
 
-        // validate item type
-        // validate item id
-        // validate quantity
-        // will set each if they are validated
-        validationHelper(viewModel, i);
+        // validate item type, item id, and quantity
+        // will set each if they are validated as well as set unit price
+        validationHelper(ivm, i);
 
 
-        i.setUnit_price(handleUnitPrice(viewModel.getItem_id()));
-        viewModel.setUnit_price(i.getUnit_price());
+        i.setUnit_price(handleUnitPrice(ivm.getItem_id()));
+        ivm.setUnit_price(i.getUnit_price());
 
-        i.setProcessing_fee(handleProcessingFee(viewModel.getItem_type()));
-        viewModel.setProcessing_fee(i.getProcessing_fee());
+        i.setProcessing_fee(handleProcessingFee(ivm.getItem_type()));
+        ivm.setProcessing_fee(i.getProcessing_fee());
 
-        i.setSubtotal(calculateSubtotal(viewModel.getQuantity(), i.getUnit_price()));
-        viewModel.setSubtotal(i.getSubtotal());
+        i.setSubtotal(calculateSubtotal(ivm.getQuantity(), i.getUnit_price()));
+        ivm.setSubtotal(i.getSubtotal());
 
-        i.setTax(handleTax(viewModel.getState(), i.getSubtotal()));
-        viewModel.setTax(i.getTax());
+        i.setTax(handleTax(ivm.getState(), i.getSubtotal()));
+        ivm.setTax(i.getTax());
 
-        i.setTotal(calculateTotal(viewModel.getSubtotal(),
-                viewModel.getTax(),
-                viewModel.getProcessing_fee()));
-        viewModel.setTotal(i.getTotal());
+        i.setTotal(calculateTotal(ivm.getSubtotal(),
+                ivm.getTax(),
+                ivm.getProcessing_fee()));
+        ivm.setTotal(i.getTotal());
 
         i = invoiceRepository.save(i);
 
-        viewModel.setId(i.getId());
+        ivm.setId(i.getId());
 
-        return viewModel;
+        return ivm;
     }
 
     public void validationHelper (InvoiceViewModel ivm, Invoice i) {
         // ensuring that the item type is valid
-        if(ivm.getItem_type().equals("Game")
-                && ivm.getItem_type().equals("Console")
-                && ivm.getItem_type().equals("TShirt"))  {
+        if(!ivm.getItem_type().equals("Game")
+                && !ivm.getItem_type().equals("Console")
+                && !ivm.getItem_type().equals("TShirt"))  {
 
             throw new NotFoundException("Must enter an item type of 'Game', 'Console', or 'TShirt'");
+
         }
 
         // setting the item type after successful validation
@@ -100,17 +103,20 @@ public class ServiceLayer {
         String type = ivm.getItem_type();
         int id = ivm.getItem_id();
 
-        // this switch-case block ensures the product id exists
+        // This switch-case block ensures the item id exists
         // and ensures that there is quantity enough to meet the invoice
+        // It will also set the unit price
         switch (type) {
+
             case "Game":
                 if(!gameRepository.findById(id).isPresent()) {
-
                     throw new NotFoundException("Item id does not exist.");
                 }
                 i.setItem_id(id);
-                if (gameRepository.findById(id).get().getQuantity() >= ivm.getQuantity())
+
+                if (gameRepository.findById(id).get().getQuantity() >= ivm.getQuantity()) {
                     i.setQuantity(ivm.getQuantity());
+                }
                 else {
                     throw new IllegalArgumentException("Quantity cannot exceed " +
                             gameRepository.findById(id).get().getQuantity() + ".");
@@ -125,8 +131,10 @@ public class ServiceLayer {
                     throw new NotFoundException("Item id does not exist.");
                 }
                 i.setItem_id(id);
-                if (consoleRepository.findById(id).get().getQuantity() >= ivm.getQuantity())
+
+                if (consoleRepository.findById(id).get().getQuantity() >= ivm.getQuantity()) {
                     i.setQuantity(ivm.getQuantity());
+                }
                 else {
                     throw new IllegalArgumentException("Quantity cannot exceed " +
                             consoleRepository.findById(id).get().getQuantity() + ".");
@@ -141,6 +149,7 @@ public class ServiceLayer {
                     throw new NotFoundException("Item id does not exist.");
                 }
                 i.setItem_id(id);
+
                 if (tShirtRepository.findById(id).get().getQuantity() >= ivm.getQuantity())
                     i.setQuantity(ivm.getQuantity());
                 else {
@@ -165,7 +174,7 @@ public class ServiceLayer {
 
         BigDecimal quantity = new BigDecimal(count);
         BigDecimal subTotal = quantity.multiply(unitPrice);
-        subTotal.add(new BigDecimal(15.49)); // accounting for quantity > 10
+        subTotal.add(new BigDecimal(15.49)); // additional charge for quantity > 10
 
         return subTotal;
     }
@@ -173,7 +182,7 @@ public class ServiceLayer {
     public BigDecimal handleTax(String initials, BigDecimal subTotal) {
         BigDecimal stateTax = taxRepository.findByState(initials).getRate();
         BigDecimal tax = stateTax.multiply(subTotal);
-        return tax;
+        return tax.setScale(2, RoundingMode.HALF_UP);
     }
 
     public BigDecimal handleUnitPrice(int id) {
@@ -187,7 +196,7 @@ public class ServiceLayer {
         // containing 'Games'
         BigDecimal fee = feeRepository.findByProductType(type + "s").getFee();
 
-        return fee;
+        return fee.setScale(2, RoundingMode.HALF_UP);
     }
 
     public BigDecimal calculateTotal(BigDecimal subTotal, BigDecimal tax, BigDecimal fee) {

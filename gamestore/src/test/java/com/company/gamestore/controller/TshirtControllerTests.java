@@ -3,13 +3,10 @@ package com.company.gamestore.controller;
 
 import com.company.gamestore.model.Tshirt;
 import com.company.gamestore.repository.TshirtRepository;
-import com.company.gamestore.repository.TshirtRepositoryTests;
-import com.company.gamestore.servicelayer.ServiceLayer;
-import com.company.gamestore.servicelayer.ServiceLayerTests;
+import com.company.gamestore.service.ServiceLayer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -33,15 +30,15 @@ public class TshirtControllerTests {
     private MockMvc mockMvc;
 
     @MockBean
-    private ServiceLayer serviceLayer;
-    @MockBean
     private TshirtRepository tshirtRepository;
 
     private ObjectMapper mapper = new ObjectMapper();
 
 
     @BeforeEach
-    public void setUp() {}
+    public void setUp() {
+        tshirtRepository.deleteAll();
+    }
 
 
     @Test

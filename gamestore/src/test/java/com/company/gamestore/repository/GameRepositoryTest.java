@@ -17,11 +17,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 @SpringBootTest
 public class GameRepositoryTest {
     @Autowired
-    GameRepository gamerepo;
+    GameRepository gameRepository;
 
     private BigDecimal decimal;
 
-    private Game game;
+
     private Game game2;
 
     private final Set<Game> games = new HashSet<>();
@@ -29,10 +29,14 @@ public class GameRepositoryTest {
 
     @BeforeEach
     public void setUp() throws Exception {
-        gamerepo.deleteAll();
+        gameRepository.deleteAll();
         decimal = BigDecimal.valueOf(2.35);
+    }
 
-        game = new Game();
+    @Test
+    public void addGame() {
+        // Arrange
+        Game game = new Game();
         game.setEsrbRating("Teen");
         game.setTitle("Life is Strange");
         game.setDescription("choices matter");
@@ -40,9 +44,99 @@ public class GameRepositoryTest {
         game.setStudio("Square Enix");
         game.setQuantity(1);
 
-        gamerepo.save(game);
+        gameRepository.save(game);
 
-        game2 = new Game();
+        // Assert
+        Optional game1 = gameRepository.findById(game.getId());
+        assertEquals(game1.get(), game);
+    }
+
+    @Test
+    public void getGameById() {
+        // Arrange
+        Game game = new Game();
+        game.setEsrbRating("Teen");
+        game.setTitle("Life is Strange");
+        game.setDescription("choices matter");
+        game.setPrice(decimal);
+        game.setStudio("Square Enix");
+        game.setQuantity(1);
+
+        gameRepository.save(game);
+
+        // Assert
+        Optional game1 = gameRepository.findById(game.getId());
+        assertEquals(game1.get(), game);
+    }
+
+    @Test
+    public void getGameByStudio() {
+        // Arrange
+        Game game = new Game();
+        game.setEsrbRating("Teen");
+        game.setTitle("Life is Strange");
+        game.setDescription("choices matter");
+        game.setPrice(decimal);
+        game.setStudio("Square Enix");
+        game.setQuantity(1);
+
+        gameRepository.save(game);
+
+        // Assert
+        List<Game> game1 = gameRepository.findGamesByStudio(game.getStudio());
+        assertEquals(1, game1.size());
+    }
+
+    @Test
+    public void getGameByTitle() {
+        // Arrange
+        Game game = new Game();
+        game.setEsrbRating("Teen");
+        game.setTitle("Life is Strange");
+        game.setDescription("choices matter");
+        game.setPrice(decimal);
+        game.setStudio("Square Enix");
+        game.setQuantity(1);
+
+        gameRepository.save(game);
+
+        // Assert
+        List<Game> game1 = gameRepository.findGamesByTitle(game.getTitle());
+        assertEquals(1, game1.size());
+    }
+
+    @Test
+    public void getGameByESRB() {
+        // Arrange
+        Game game = new Game();
+        game.setEsrbRating("Teen");
+        game.setTitle("Life is Strange");
+        game.setDescription("choices matter");
+        game.setPrice(decimal);
+        game.setStudio("Square Enix");
+        game.setQuantity(1);
+
+        gameRepository.save(game);
+
+        // Assert
+        List<Game> game1 = gameRepository.findGamesByEsrbRating(game.getEsrbRating());
+        assertEquals(1, game1.size());
+    }
+
+    @Test
+    public void getAllGames() {
+        // Arrange
+        Game game = new Game();
+        game.setEsrbRating("Teen");
+        game.setTitle("Life is Strange");
+        game.setDescription("choices matter");
+        game.setPrice(decimal);
+        game.setStudio("Square Enix");
+        game.setQuantity(1);
+
+        gameRepository.save(game);
+
+        Game game2 = new Game();
         game2.setEsrbRating("Mature");
         game2.setTitle("Until Dawn");
         game2.setDescription("choices r deadly");
@@ -50,51 +144,28 @@ public class GameRepositoryTest {
         game2.setStudio("Supermassive Games");
         game2.setQuantity(1);
 
-        gamerepo.save(game2);
-    }
+        gameRepository.save(game2);
 
-    @Test
-    public void addGame() {
-        Optional game1 = gamerepo.findById(game.getId());
-        assertEquals(game1.get(), game);
-    }
-
-    @Test
-    public void getGameById() {
-        Optional game1 = gamerepo.findById(game.getId());
-        assertEquals(game1.get(), game);
-    }
-
-    @Test
-    public void getGameByStudio() {
-        List<Game> game1 = gamerepo.findGamesByStudio(game.getStudio());
-        assertEquals(1, game1.size());
-    }
-
-    @Test
-    public void getGameByTitle() {
-        List<Game> game1 = gamerepo.findGamesByTitle(game.getTitle());
-        assertEquals(1, game1.size());
-    }
-
-    @Test
-    public void getGameByESRB() {
-        List<Game> game1 = gamerepo.findGamesByEsrbRating(game.getEsrbRating());
-        assertEquals(1, game1.size());
-    }
-
-    @Test
-    public void getAllGames() {
-        List<Game> games = gamerepo.findAll();
+        List<Game> games = gameRepository.findAll();
         assertEquals(games.size(), 2);
     }
 
     @Test
     public void updateGame() {
-        game.setEsrbRating("Everyone");
-        gamerepo.save(game);
+        // Arrange
+        Game game = new Game();
+        game.setEsrbRating("Teen");
+        game.setTitle("Life is Strange");
+        game.setDescription("choices matter");
+        game.setPrice(decimal);
+        game.setStudio("Square Enix");
+        game.setQuantity(1);
 
-        Optional game1 = gamerepo.findById(game.getId());
+        game.setEsrbRating("Everyone");
+        gameRepository.save(game);
+
+        // Assert
+        Optional game1 = gameRepository.findById(game.getId());
         assertEquals(game1.get(), game);
 
 
@@ -102,8 +173,20 @@ public class GameRepositoryTest {
 
     @Test
     public void deleteGame() {
-        gamerepo.deleteById(game.getId());
-        Optional game1 = gamerepo.findById(game.getId());
+        // Arrange
+        Game game = new Game();
+        game.setEsrbRating("Teen");
+        game.setTitle("Life is Strange");
+        game.setDescription("choices matter");
+        game.setPrice(decimal);
+        game.setStudio("Square Enix");
+        game.setQuantity(1);
+
+        gameRepository.save(game);
+
+        // Assert
+        gameRepository.deleteById(game.getId());
+        Optional game1 = gameRepository.findById(game.getId());
         assertFalse(game1.isPresent());
     }
 }
