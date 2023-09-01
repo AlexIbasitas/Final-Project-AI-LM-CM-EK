@@ -1,15 +1,10 @@
 package com.company.gamestore.repository;
 
-import com.company.gamestore.model.Game;
 import com.company.gamestore.model.Invoice;
-import com.company.gamestore.service.ServiceLayer;
-import com.company.gamestore.viewmodel.InvoiceViewModel;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.math.BigDecimal;
 import java.util.List;

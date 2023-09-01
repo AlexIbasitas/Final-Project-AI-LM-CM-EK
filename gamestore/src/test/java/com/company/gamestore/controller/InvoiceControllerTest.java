@@ -1,8 +1,7 @@
 package com.company.gamestore.controller;
 
 import com.company.gamestore.model.Invoice;
-import com.company.gamestore.repository.InvoiceRepository;
-import com.company.gamestore.service.ServiceLayer;
+import com.company.gamestore.servicelayer.ServiceLayer;
 import com.company.gamestore.viewmodel.InvoiceViewModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -12,11 +11,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -47,6 +44,7 @@ public class InvoiceControllerTest {
         ivm.setZip("90001");
         ivm.setItem_type("Game");
         ivm.setItem_id(123);
+        ivm.setQuantity(2);
 
         serviceLayer.saveInvoice(ivm);
 
