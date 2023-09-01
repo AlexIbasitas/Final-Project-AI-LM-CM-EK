@@ -35,7 +35,7 @@ public class InvoiceViewModel {
     private BigDecimal unit_price;
 
     @NotNull(message = "You must provide a quantity.")
-    @Size(min =  1, message = "Quantity must be at least one.")
+    @Min(value = 1, message = "Quantity must be at least one.")
     private int quantity;
 
     private BigDecimal subtotal;

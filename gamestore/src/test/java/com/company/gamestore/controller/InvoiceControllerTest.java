@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -122,6 +123,7 @@ public class InvoiceControllerTest {
         ivm.setZip("90001");
         ivm.setItem_type("Game");
         ivm.setItem_id(123);
+        ivm.setQuantity(1);
 
         serviceLayer.saveInvoice(ivm);
 
@@ -134,5 +136,29 @@ public class InvoiceControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void emptyStateShouldReturnStatus422() throws Exception {
+        // Arrange
+        ivm.setName("John Doe");
+        ivm.setStreet("123 Main St");
+        ivm.setCity("Los Angeles");
+        ivm.setState("");
+        ivm.setZip("90001");
+        ivm.setItem_type("Game");
+        ivm.setItem_id(123456);
+        ivm.setQuantity(1);
+
+        String inputJSON = mapper.writeValueAsString(ivm);
+
+        // Act
+        mockMvc.perform(
+                        post("/invoices")
+                                .content(inputJSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 }

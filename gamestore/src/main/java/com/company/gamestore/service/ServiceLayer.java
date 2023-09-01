@@ -6,6 +6,7 @@ import com.company.gamestore.repository.*;
 import com.company.gamestore.viewmodel.InvoiceViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.webjars.NotFoundException;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
@@ -85,11 +86,12 @@ public class ServiceLayer {
     }
 
     public void validationHelper (InvoiceViewModel ivm, Invoice i) {
-        if(ivm.getItem_type() != "Game"
-                && ivm.getItem_type() != "Console"
-                && ivm.getItem_type() != "TShirt") {
+        // ensuring that the item type is valid
+        if(ivm.getItem_type().equals("Game")
+                && ivm.getItem_type().equals("Console")
+                && ivm.getItem_type().equals("TShirt"))  {
 
-            throw new IllegalArgumentException("Must enter an item type of 'Game', 'Console', or 'TShirt'");
+            throw new NotFoundException("Must enter an item type of 'Game', 'Console', or 'TShirt'");
         }
 
         // setting the item type after successful validation
@@ -98,11 +100,13 @@ public class ServiceLayer {
         String type = ivm.getItem_type();
         int id = ivm.getItem_id();
 
+        // this switch-case block ensures the product id exists
+        // and ensures that there is quantity enough to meet the invoice
         switch (type) {
             case "Game":
                 if(!gameRepository.findById(id).isPresent()) {
 
-                    throw new IllegalArgumentException("Item id does not exist.");
+                    throw new NotFoundException("Item id does not exist.");
                 }
                 i.setItem_id(id);
                 if (gameRepository.findById(id).get().getQuantity() >= ivm.getQuantity())
@@ -118,7 +122,7 @@ public class ServiceLayer {
 
             case "Console":
                 if(!consoleRepository.findById(id).isPresent()) {
-                    throw new IllegalArgumentException("Item id does not exist.");
+                    throw new NotFoundException("Item id does not exist.");
                 }
                 i.setItem_id(id);
                 if (consoleRepository.findById(id).get().getQuantity() >= ivm.getQuantity())
@@ -134,7 +138,7 @@ public class ServiceLayer {
 
             case "TShirt":
                 if(!tShirtRepository .findById(id).isPresent()) {
-                    throw new IllegalArgumentException("Item id does not exist.");
+                    throw new NotFoundException("Item id does not exist.");
                 }
                 i.setItem_id(id);
                 if (tShirtRepository.findById(id).get().getQuantity() >= ivm.getQuantity())
