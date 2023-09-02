@@ -3,6 +3,8 @@ package com.company.gamestore.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -18,16 +20,20 @@ public class Game implements Serializable {
     @Column(name = "game_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
+    @NotEmpty(message = "You must enter a title")
     private String title;
+    @NotEmpty(message = "You must enter a esrbRating")
 
     private String esrbRating;
+    @NotNull(message = "You must enter a price")
 
     private BigDecimal price;
+    @NotNull(message = "You must enter a studio")
 
     private String studio;
 
     private int quantity;
+    @NotNull(message = "You must enter a description")
 
     private String description;
 

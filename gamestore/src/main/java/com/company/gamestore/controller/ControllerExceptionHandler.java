@@ -24,7 +24,7 @@ import java.util.List;
 @RestControllerAdvice
 public class ControllerExceptionHandler {
 
-    // Handles error 404 and returns proper status code with message
+    // Handles error 404 and returns proper status code with message. Uses NoHandlerFoundException
     @ExceptionHandler(value = NoHandlerFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<CustomErrorResponse> handleNotFoundException(NoHandlerFoundException e){
@@ -35,7 +35,7 @@ public class ControllerExceptionHandler {
         return responseEntity;
     }
 
-    // Handles error 404 and provides the option to pass a message
+    // Handles error 404 and returns proper status code with message. Uses NotFoundException
     @ExceptionHandler(value = NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND) // You can adjust the status as needed
     public ResponseEntity<CustomErrorResponse> handleNotFoundException(NotFoundException e) {
@@ -46,7 +46,7 @@ public class ControllerExceptionHandler {
         return responseEntity;
     }
 
-    // Handles error 400 and provides the ability to pass a message
+    // Handles error 400 and returns proper status code with message.
     @ExceptionHandler(value = IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<CustomErrorResponse> handleIllegalArgumentException(IllegalArgumentException e) {
@@ -57,7 +57,7 @@ public class ControllerExceptionHandler {
         return responseEntity;
     }
 
-    // Handles all other errors
+    // Handles other errors
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ResponseEntity<List<CustomErrorResponse>> recordValidationError(MethodArgumentNotValidException e) {

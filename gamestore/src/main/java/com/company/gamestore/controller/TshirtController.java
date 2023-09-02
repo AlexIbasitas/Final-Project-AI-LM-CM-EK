@@ -3,7 +3,6 @@ package com.company.gamestore.controller;
 
 import com.company.gamestore.model.Tshirt;
 import com.company.gamestore.repository.TshirtRepository;
-import com.company.gamestore.service.ServiceLayer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +16,9 @@ public class TshirtController {
     @Autowired
     TshirtRepository tshirtRepository;
 
-    @GetMapping("/")
-    public String test() {
-        return "Test Complete";
-    }
-
     @PostMapping("/tshirts")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createTshirt(@RequestBody Tshirt tshirt) {
+    public void createTshirt(@RequestBody @Valid Tshirt tshirt) {
         tshirtRepository.save(tshirt);
     }
 

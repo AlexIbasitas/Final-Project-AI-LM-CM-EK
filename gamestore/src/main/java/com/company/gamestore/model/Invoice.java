@@ -1,9 +1,10 @@
 package com.company.gamestore.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.sun.istack.NotNull;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -17,19 +18,32 @@ public class Invoice implements Serializable {
     @Column(name = "invoice_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @NotEmpty(message = "You must enter a name")
 
     private String name;
+    @NotEmpty(message = "You must enter a street")
     private String street;
+    @NotEmpty(message = "You must enter a city")
     private String city;
+    @NotEmpty(message = "You must enter a state")
     private String state;
     private String zipcode;
+    @NotEmpty(message = "You must enter a item_type")
     private String item_type;
+    @NotNull(message = "You must enter a item_id")
     private int item_id;
+    @NotNull(message = "You must enter a unit_price")
     private BigDecimal unit_price;
+    @NotNull(message = "You must enter a quantity")
+
     private int quantity;
+    @NotNull(message = "You must enter a subtotal")
     private BigDecimal subtotal;
+    @NotNull(message = "You must enter a tax")
     private BigDecimal tax;
+    @NotNull(message = "You must enter a processing_fee")
     private BigDecimal processing_fee;
+    @NotNull(message = "You must enter a total")
     private BigDecimal total;
 
     public Invoice() {}

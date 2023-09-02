@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,13 +50,13 @@ public class GameController {
 
     @PostMapping("/games")
     @ResponseStatus(HttpStatus.CREATED)
-    public Game addGame(@RequestBody Game game) {
+    public Game addGame(@RequestBody @Valid Game game) {
         return gamerepo.save(game);
     }
 
     @PutMapping("/games")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateGame(@RequestBody Game game) {
+    public void updateGame(@RequestBody @Valid Game game) {
         gamerepo.save(game);
     }
 

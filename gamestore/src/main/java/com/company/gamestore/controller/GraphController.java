@@ -27,9 +27,6 @@ public class GraphController {
     @Autowired
     ConsoleRepository consolerepo;
 
-    @Autowired
-    InvoiceRepository invoiceRepository;
-
 
     @QueryMapping
     public Game gameById(@Argument int id){
@@ -80,33 +77,4 @@ public class GraphController {
         List<Console> console = consolerepo.findByManufacturer(manufacturer);
         return console;
     }
-
-    //Mutation mapping to set up !
-
-//    @MutationMapping
-//    public Game addGame(@Argument String title, @Argument String esrbRating, @Argument String description, @Argument BigDecimal price,  @Argument String studio, @Argument int quantity) {
-//        Game game = new Game(title, esrbRating, description, price, studio, quantity);
-//        return gamerepo.save(game);
-//    }
-
-//    @MutationMapping
-//    public Game addGame(@Argument String title, @Argument String esrbRating, @Argument String description, @Argument BigDecimal price, @Argument String studio, @Argument int quantity) {
-//        Game game = new Game(title, esrbRating, description, price, studio, quantity);
-//        return gamerepo.save(game);
-//    }
 }
-
-
-//sql file to insert data into the database
-//lots of things that should throw an error, write notes on what should throw an error
-//throws (specifc error) <add for the method>
-
-//public Address updateAddressByUserId(int id, AddressDTO newAddress) throws NotFound {
-// // service method here
-//}
-
-
-//Create Controller Advice FIRST!!
-//Put what we learned in class into the project
-//Use Status directly in controller
-//try catch blocks | if else with != null

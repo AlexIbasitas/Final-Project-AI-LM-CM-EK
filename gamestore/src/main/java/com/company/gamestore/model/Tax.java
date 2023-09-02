@@ -1,12 +1,12 @@
 package com.company.gamestore.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.sun.istack.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -18,7 +18,7 @@ public class Tax implements Serializable {
     @Column(name = "state")
     private String state;
 
-    @NotNull
+    @NotNull(message = "You must enter a rate")
     private BigDecimal rate;
 
     public Tax() {
