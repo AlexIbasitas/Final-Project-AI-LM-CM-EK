@@ -924,38 +924,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CustomErrorResponse'
-  /:
-    get:
-      tags:
-        - tshirt-controller
-      operationId: test
-      responses:
-        '200':
-          description: OK
-          content:
-            '*/*':
-              schema:
-                type: string
-        '400':
-          description: Bad Request
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/CustomErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/CustomErrorResponse'
-        '422':
-          description: Unprocessable Entity
-          content:
-            '*/*':
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CustomErrorResponse'
 components:
   schemas:
     CustomErrorResponse:
@@ -995,6 +963,12 @@ components:
           type: integer
           format: int32
     Game:
+      required:
+        - description
+        - esrbRating
+        - price
+        - studio
+        - title
       type: object
       properties:
         id:
