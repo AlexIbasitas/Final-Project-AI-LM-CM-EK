@@ -9,6 +9,7 @@ public class InvoiceViewModel {
     private int id;
 
     @NotNull(message = "You must provide a name.")
+    @NotEmpty(message = "Name cannot be empty.")
     private String name;
 
     @NotNull(message = "You must provide a street.")
