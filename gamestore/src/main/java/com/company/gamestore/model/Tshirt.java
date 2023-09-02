@@ -16,7 +16,7 @@ import java.util.Objects;
 public class Tshirt implements Serializable {
     @Id
     @Column(name = "tshirt_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int tshirtId;
     @NotEmpty(message = "You must supply a value for size.")
     private String size;
