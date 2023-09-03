@@ -44,21 +44,30 @@ public class GraphController {
         return game;
     }
     @QueryMapping
-    public List<Game> getGameByTitle(@Argument String title) {
-        List<Game> game = gamerepo.findGamesByTitle(title);
-        return game;
+    public List<Game> gameByTitle(@Argument String title) {
+        Optional<List<Game>> game = gamerepo.findGamesByTitle(title);
+        if(game.isPresent()){
+            return game.get();
+        }
+        return null;
     }
 
     @QueryMapping
-    public List<Game> getGameByStudio(@Argument String studio) {
-        List<Game> game = gamerepo.findGamesByStudio(studio);
-        return game;
+    public List<Game> gameByStudio(@Argument String studio) {
+        Optional<List<Game>> game = gamerepo.findGamesByStudio(studio);
+        if(game.isPresent()){
+            return game.get();
+        }
+        return null;
     }
 
     @QueryMapping
-    public List<Game> getGameByESRB(@Argument String esrbRating) {
-        List<Game> game = gamerepo.findGamesByStudio(esrbRating);
-        return game;
+    public List<Game> gameByESRB(@Argument String esrbRating) {
+        Optional<List<Game>> game = gamerepo.findGamesByStudio(esrbRating);
+        if(game.isPresent()){
+            return game.get();
+        }
+        return null;
     }
 
     @QueryMapping

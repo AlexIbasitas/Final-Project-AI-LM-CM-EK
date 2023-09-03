@@ -32,20 +32,29 @@ public class GameController {
 
     @GetMapping("/games/studio/{studio}")
     public List<Game> getGameByStudio(@PathVariable String studio) {
-        List<Game> returnVal = gamerepo.findGamesByStudio(studio);
-        return returnVal;
+        Optional<List<Game>> returnVal = gamerepo.findGamesByStudio(studio);
+        if(returnVal.isPresent()){
+            return returnVal.get();
+        }
+        return null;
     }
 
     @GetMapping("/games/title/{title}")
     public List<Game> getGameByTitle(@PathVariable String title) {
-        List<Game> returnVal = gamerepo.findGamesByTitle(title);
-        return returnVal;
+        Optional<List<Game>> returnVal = gamerepo.findGamesByTitle(title);
+        if(returnVal.isPresent()){
+            return returnVal.get();
+        }
+        return null;
     }
 
     @GetMapping("/games/ESRB/{esrbRating}")
     public List<Game> getGameByESRB(@PathVariable String esrbRating) {
-        List<Game> returnVal = gamerepo.findGamesByEsrbRating(esrbRating);
-        return returnVal;
+        Optional<List<Game>> returnVal = gamerepo.findGamesByEsrbRating(esrbRating);
+        if(returnVal.isPresent()){
+            return returnVal.get();
+        }
+        return null;
     }
 
     @PostMapping("/games")

@@ -24,7 +24,7 @@ type Query {
     consolebyManufacturer(manufacturer: String!): [Console]
     games: [Game]
     gameById(id: ID!): Game
-    getGameByStudio(studio: String): Game
-    getGameByTitle(title: String): Game
-    getGameByESRB(esrbRating: String): Game
+    gameByStudio(studio: String!): [Game]
+    gameByTitle(title: String!): [Game]
+    gameByESRB(esrbRating: String!): [Game]
 }

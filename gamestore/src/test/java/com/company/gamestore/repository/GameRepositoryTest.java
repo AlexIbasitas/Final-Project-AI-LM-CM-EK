@@ -83,8 +83,8 @@ public class GameRepositoryTest {
         gameRepository.save(game);
 
         // Assert
-        List<Game> game1 = gameRepository.findGamesByStudio(game.getStudio());
-        assertEquals(1, game1.size());
+        Optional<List<Game>> game1 = gameRepository.findGamesByStudio(game.getStudio());
+        assertEquals(1, game1.get().size());
     }
 
     @Test
@@ -101,8 +101,8 @@ public class GameRepositoryTest {
         gameRepository.save(game);
 
         // Assert
-        List<Game> game1 = gameRepository.findGamesByTitle(game.getTitle());
-        assertEquals(1, game1.size());
+        Optional<List<Game>> game1 = gameRepository.findGamesByTitle(game.getTitle());
+        assertEquals(1, game1.get().size());
     }
 
     @Test
@@ -119,8 +119,8 @@ public class GameRepositoryTest {
         gameRepository.save(game);
 
         // Assert
-        List<Game> game1 = gameRepository.findGamesByEsrbRating(game.getEsrbRating());
-        assertEquals(1, game1.size());
+        Optional<List<Game>> game1 = gameRepository.findGamesByEsrbRating(game.getEsrbRating());
+        assertEquals(1, game1.get().size());
     }
 
     @Test
