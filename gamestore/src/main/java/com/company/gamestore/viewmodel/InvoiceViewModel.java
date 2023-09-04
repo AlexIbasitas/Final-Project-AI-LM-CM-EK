@@ -22,6 +22,7 @@ public class InvoiceViewModel {
     private String state;
 
     @NotNull(message = "You must provide a zip.")
+    @NotEmpty(message = "Zipcode cannot be empty.")
     @Size(min = 5, max = 5, message = "Zipcode must be exactly five numbers long.")
     private String zip;
 
